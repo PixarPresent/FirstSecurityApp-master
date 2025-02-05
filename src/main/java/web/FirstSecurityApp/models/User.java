@@ -1,32 +1,51 @@
 package web.FirstSecurityApp.models;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.*;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String username;
-
     private String password;
-
     private String email;
 
-    private String role;
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Collection<Role> roles;
+
+
+
 
     public User(String username, String password, String email, String role) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.roles = new ArrayList<>();
     }
 
     public User() {}
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -40,6 +59,11 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection getAuthorities() {
+        return roles;
     }
 
     public String getPassword() {
@@ -68,11 +92,4 @@ public class User {
                 '}';
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
