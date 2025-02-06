@@ -22,6 +22,7 @@
     <td th:text="${user.username}"></td>
     <td th:text="${user.password}"></td>
     <td th:text="${user.email}"></td>
+    <td th:text="${user.role}"></td>
     <td>
 
       <form action="#" th:action="@{/edit}" th:method="get">
@@ -37,6 +38,6 @@
   </tr>
   </tbody>
 </table>
-<a href="/new">Create new user</a>
+<a href="/">Create new user</a>
 </body>
 </html>

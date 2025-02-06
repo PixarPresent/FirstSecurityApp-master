@@ -1,5 +1,8 @@
 package web.FirstSecurityApp.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.FirstSecurityApp.models.Role;
@@ -13,11 +16,15 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     UserRepository userRepository;
 
     @Override
-    public void createUser(User user) {
-        user.setPassword(user.getPassword());
+    public void createUser(User user, String rawPassword) {
+        String encode = passwordEncoder.encode(rawPassword);
+        user.setPassword(encode);
         userRepository.save(user);
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    void createUser(User user);
+    void createUser(User user, String rawPassword);
     void updateUser(User user, Role role);
     void deleteUser(Long id);
     User getUserById(Long id);
