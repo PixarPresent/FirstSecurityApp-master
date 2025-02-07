@@ -17,10 +17,12 @@ import web.FirstSecurityApp.security.UserDetailsServiceImpl;
 @Configuration
 public class WebSecurityConfig   {
     private final UserDetailsServiceImpl userDetailsService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, LoginSuccessHandler loginSuccessHandler) {
         this.userDetailsService = userDetailsService;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     @Bean
@@ -38,27 +40,23 @@ public class WebSecurityConfig   {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/login", "/registration").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/registration").permitAll()
-                        .requestMatchers("/welcome").permitAll()
-                        .anyRequest().authenticated()
-                )
+        http.authorizeRequests()
+
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/login", "/welcome", "/process_login").permitAll()
+                .anyRequest().authenticated()
+
+                .and()
 
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/process_login")
-                .defaultSuccessUrl("/user", true)
-                .failureUrl("/login?error=true")
+                .successHandler(loginSuccessHandler)
 
                 .and()
 
                 .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/login")
-                ;
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login");
 
         return http.build();
     }

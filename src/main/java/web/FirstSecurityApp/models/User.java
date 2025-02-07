@@ -16,15 +16,6 @@ public class User implements UserDetails {
     private String password;
     private String email;
 
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
     @ManyToMany
     @JoinTable(
             name = "user_roles",
@@ -32,8 +23,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Collection<Role> roles;
-
-
 
 
     public User(String username, String password, String email, String role) {
@@ -44,6 +33,7 @@ public class User implements UserDetails {
     }
 
     public User() {}
+
 
     public long getId() {
         return id;
@@ -57,18 +47,40 @@ public class User implements UserDetails {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
 
     @Override
-    public Collection getAuthorities() {
+    public Collection<Role> getAuthorities() {
         return roles;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
+
 
     public void setPassword(String password) {
         this.password = password;
@@ -81,6 +93,15 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
 
     @Override
     public String toString() {

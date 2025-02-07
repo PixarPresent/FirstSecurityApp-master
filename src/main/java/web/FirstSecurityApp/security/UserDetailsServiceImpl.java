@@ -13,17 +13,17 @@ import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.repositories.UserRepository;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     private User findUserByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -36,13 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Username " + username + " not found");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorites(user.getRoles()));
+        return user;
     }
-
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorites(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
-
-
 }

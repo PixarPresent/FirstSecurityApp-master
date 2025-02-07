@@ -16,10 +16,16 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void createUser(User user, String rawPassword) {

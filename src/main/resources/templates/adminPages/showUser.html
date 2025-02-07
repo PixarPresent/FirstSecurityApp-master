@@ -2,29 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ADMIN PAGE</title>
+    <title>User with id</title>
 </head>
 <body>
-<h1>YOU ADMIN</h1>
+
     <table>
         <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Password</th>
             <th>Email</th>
-            <th>Actions</th>
+            <th>Role</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
+        <tr>
             <td th:text="${user.id}"></td>
             <td th:text="${user.username}"></td>
-            <td th:text="${user.password}"></td>
             <td th:text="${user.email}"></td>
-            <td th:text="${user.role}"></td>
+            <td>
+                <span th:each="role : ${user.roles}" th:text="${#strings.replace(role.name, 'ROLE_', '')}"></span>
+            </td>
         </tr>
         </tbody>
     </table>
+
 </body>
 </html>
