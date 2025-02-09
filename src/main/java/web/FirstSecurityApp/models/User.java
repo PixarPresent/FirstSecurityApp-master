@@ -1,32 +1,41 @@
 package web.FirstSecurityApp.models;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.*;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String username;
-
     private String password;
-
     private String email;
 
-    private String role;
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Collection<Role> roles;
+
 
     public User(String username, String password, String email, String role) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.roles = new ArrayList<>();
     }
 
     public User() {}
 
-    public int getId() {
+
+    public long getId() {
         return id;
     }
 
@@ -38,13 +47,40 @@ public class User {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @Override
+    public Collection<Role> getAuthorities() {
+        return roles;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
+
 
     public void setPassword(String password) {
         this.password = password;
@@ -58,6 +94,15 @@ public class User {
         this.email = email;
     }
 
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
@@ -68,11 +113,4 @@ public class User {
                 '}';
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
