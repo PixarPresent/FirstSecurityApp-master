@@ -21,8 +21,26 @@
     <td th:text="${user.username}"></td>
     <td th:text="${user.email}"></td>
     <td th:each="role : ${user.getRoles()}" th:text="${#strings.replace(role.name, 'ROLE_', '')}"></td>
+    <td>
+
+      <form action="#" th:action="@{/admin/edit}" th:method="get">
+        <input type="hidden" th:name="id" th:value="${user.id}"/>
+        <button type="submit">Edit</button>
+      </form>
+
+      <form method="post" th:action="@{admin/delete}">
+        <input type="hidden" th:name="id" th:value="${user.id}"/>
+        <button type="submit">Delete</button>
+      </form>
+    </td>
   </tr>
   </tbody>
 </table>
+
+  <a href="/admin/create">Create new User</a>
+  <br/>
+  <form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+  </form>
 </body>
 </html>

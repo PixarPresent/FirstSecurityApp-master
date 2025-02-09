@@ -12,8 +12,14 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService {
 
+
+    private final RoleRepository roleRepository;
+
     @Autowired
-    private RoleRepository roleRepository;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
+
 
     @Override
     public List<Role> getRolesByIds(List<Long> ids) {
@@ -23,5 +29,15 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
+    }
+
+    @Override
+    public Role getRoleById(Long roleId) {
+        return roleRepository.findById(roleId).get();
+    }
+
+    @Override
+    public Role getRoleByName(String role) {
+        return roleRepository.getRoleByName(role);
     }
 }
