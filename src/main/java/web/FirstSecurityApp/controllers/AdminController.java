@@ -1,6 +1,7 @@
 package web.FirstSecurityApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,11 +84,13 @@ public class AdminController {
     }
 
     @PostMapping("/admin/edit")
-    public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "roles", required = false) List<Long> roles) {
+    public String updateUser(@ModelAttribute("user") User userForm, @RequestParam(value = "roles", required = false) List<Long> roles) {
 
+        User newUser = userService.getUserById(userForm.getId());
         Set<Role> userRoles = new HashSet<>();
-
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Role userRole = roleService.getRoleByName("ROLE_USER");
+
         if (userRole != null) {
             userRoles.add(userRole);
         }
@@ -101,9 +104,14 @@ public class AdminController {
             }
         }
 
-        user.setRoles(userRoles);
+        if (userForm.getPassword() != null && !userForm.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(userForm.getPassword());
+            newUser.setPassword(encodedPassword);
+        }
 
-        userService.updateUser(user);
+        newUser.setRoles(userRoles);
+
+        userService.updateUser(newUser);
 
         return "redirect:/admin";
     }

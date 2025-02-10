@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         User updatedUser = getUserById(user.getId());
 
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) { // Проверяем, что пароль был изменен
+        if (user.getPassword() != null || !user.getPassword().isEmpty()) { // Проверяем, что пароль был изменен
             user.setPassword(passwordEncoder.encode(user.getPassword())); // Хешируем пароль
         }
 
