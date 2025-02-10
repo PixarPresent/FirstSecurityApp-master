@@ -20,6 +20,9 @@ public class UserController {
 
     @GetMapping("/welcome")
     public String welcomePage(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        model.addAttribute("user", user);
         return "welcome";
     }
 }

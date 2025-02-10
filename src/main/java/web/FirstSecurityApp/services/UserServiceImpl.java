@@ -13,22 +13,33 @@ import web.FirstSecurityApp.repositories.UserRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     @Transactional
-    public void createUser(User user) {
+    public void createUser(User user, Set<Role> roles) {
+        Role userRole = roleRepository.getRoleByName("ROLE_USER");
+        if (userRole != null && !roles.contains(userRole)) {
+            roles.add(userRole);
+        }
+
+        user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEmail(user.getEmail());
+        user.setUsername(user.getUsername());
         userRepository.save(user);
     }
 
@@ -43,7 +54,6 @@ public class UserServiceImpl implements UserService {
 
         updatedUser.setUsername(user.getUsername());
         updatedUser.setRoles(user.getRoles());
-        updatedUser.setEmail(user.getEmail());
         userRepository.save(updatedUser);
     }
 

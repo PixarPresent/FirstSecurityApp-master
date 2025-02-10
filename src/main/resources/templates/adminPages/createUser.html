@@ -23,7 +23,9 @@
             <p>Roles:</p>
             <p th:each="role : ${roleList}">
                 <label>
-                    <input type="checkbox" name="roles" th:value="${role.id}" />
+                    <input type="checkbox" name="roles" th:value="${role.id}"
+                           th:checked="${role.name == 'ROLE_USER'}"
+                           th:disabled="${role.name == 'ROLE_USER'}" />
                     <span th:text="${#strings.replace(role.name, 'ROLE_', '')}"></span>
                 </label>
             </p>
