@@ -18,12 +18,15 @@ import java.util.*;
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
 
     @Autowired
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
+
     }
 
     //TODO.html: сделать запросы на странички
@@ -85,12 +88,11 @@ public class AdminController {
 
     @PostMapping("/admin/edit")
     public String updateUser(@ModelAttribute("user") User userForm, @RequestParam(value = "roles", required = false) List<Long> roles) {
-
         User newUser = userService.getUserById(userForm.getId());
-        Set<Role> userRoles = new HashSet<>();
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Role userRole = roleService.getRoleByName("ROLE_USER");
 
+        Set<Role> userRoles = new HashSet<>();
+
+        Role userRole = roleService.getRoleByName("ROLE_USER");
         if (userRole != null) {
             userRoles.add(userRole);
         }
@@ -105,18 +107,18 @@ public class AdminController {
         }
 
         if (userForm.getPassword() != null && !userForm.getPassword().isEmpty()) {
-            String encodedPassword = passwordEncoder.encode(userForm.getPassword());
-            newUser.setPassword(encodedPassword);
+            newUser.setPassword(passwordEncoder.encode(userForm.getPassword()));
+        } else {
+            newUser.setPassword(newUser.getPassword());
         }
 
         newUser.setRoles(userRoles);
+        newUser.setUsername(userForm.getUsername());
 
         userService.updateUser(newUser);
 
         return "redirect:/admin";
     }
-
-
     @PostMapping("/admin/delete")
     public String deleteUser(@ModelAttribute("user") User user) {
         userService.deleteUser(user.getId());

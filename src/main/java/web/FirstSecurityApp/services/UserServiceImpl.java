@@ -17,13 +17,13 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
-        this.passwordEncoder = passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
@@ -37,9 +37,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setEmail(user.getEmail());
-        user.setUsername(user.getUsername());
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Хэшируем пароль
         userRepository.save(user);
     }
 
@@ -48,15 +46,16 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         User updatedUser = getUserById(user.getId());
 
-        if (user.getPassword() != null || !user.getPassword().isEmpty()) { // Проверяем, что пароль был изменен
-            user.setPassword(passwordEncoder.encode(user.getPassword())); // Хешируем пароль
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            updatedUser.setPassword(updatedUser.getPassword());
         }
 
         updatedUser.setUsername(user.getUsername());
         updatedUser.setRoles(user.getRoles());
         userRepository.save(updatedUser);
     }
-
     @Override
     @Transactional
     public void deleteUser(Long id) {

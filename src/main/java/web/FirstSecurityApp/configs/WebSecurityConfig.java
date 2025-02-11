@@ -44,7 +44,7 @@ public class WebSecurityConfig   {
 
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/login", "/welcome", "/process_login").permitAll()
+                .requestMatchers( "/login", "/welcome", "/process_login").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
