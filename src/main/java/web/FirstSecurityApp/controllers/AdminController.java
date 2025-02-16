@@ -48,50 +48,64 @@ public class AdminController {
     }
 
     @PostMapping("/admin/create")
-    public String createUser(@ModelAttribute("user") User user, @RequestParam(value="roles") List<Long> roles) {
+    public String createUser(@ModelAttribute("user") User user, @RequestParam(value="roles", required = false) List<Long> roles) {
+        Set<Role> userRoles = new HashSet<>();
 
-        if (roles != null && !roles.isEmpty()) {
-            List<Role> selectedRoles = new ArrayList<>();
-            for (Long roleId : roles) {
-                Role role = roleService.getRoleById(roleId); // Реализуй этот метод в RoleService
-                if (role != null) {
-                    selectedRoles.add(role);
-                }
-            }
-            user.setRoles(selectedRoles);
+        Role userRole = roleService.getRoleByName("ROLE_USER");
+        if (userRole != null) {
+            userRoles.add(userRole);
         }
 
-        userService.createUser(user);
+        if (roles != null) {
+            for (Long roleId : roles) {
+                Role role = roleService.getRoleById(roleId);
+                if (role != null) {
+                    userRoles.add(role);
+                }
+            }
+        }
+
+        userService.createUser(user, userRoles);
 
         return "redirect:/admin";
     }
 
     @GetMapping("/admin/edit")
     public String edit(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("roleList", roleService.getAllRoles());
+        User user = userService.getUserById(id);
+
+        List<Role> roleList = roleService.getAllRoles();
+
+        model.addAttribute("user", user);
+        model.addAttribute("roleList", roleList);
+
         return "/adminPages/editUser";
     }
 
     @PostMapping("/admin/edit")
-    public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "roles", required = false) List<Long> roleIds) {
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "roles", required = false) List<Long> roles) {
 
-        User existingUser = userService.getUserById(user.getId());
+        Set<Role> userRoles = new HashSet<>();
 
-        existingUser.setUsername(user.getUsername());
-        existingUser.setPassword(user.getPassword());
-
-        if (roleIds != null && !roleIds.isEmpty()) {
-            List<Role> roles = roleService.getRolesByIds(roleIds);
-            existingUser.setRoles(roles);
-        } else {
-            existingUser.setRoles(new ArrayList<>());
+        Role userRole = roleService.getRoleByName("ROLE_USER");
+        if (userRole != null) {
+            userRoles.add(userRole);
         }
 
-        userService.updateUser(existingUser);
+        if (roles != null) {
+            for (Long roleId : roles) {
+                Role role = roleService.getRoleById(roleId);
+                if (role != null) {
+                    userRoles.add(role);
+                }
+            }
+        }
+
+        user.setRoles(userRoles);
+
+        userService.updateUser(user);
 
         return "redirect:/admin";
-
     }
 
 
