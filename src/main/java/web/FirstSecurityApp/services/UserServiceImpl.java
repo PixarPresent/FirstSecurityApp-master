@@ -47,13 +47,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateUser(User user) {
         User updatedUser = getUserById(user.getId());
-
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) { // Проверяем, что пароль был изменен
-            user.setPassword(passwordEncoder.encode(user.getPassword())); // Хешируем пароль
-        }
-
         updatedUser.setUsername(user.getUsername());
         updatedUser.setRoles(user.getRoles());
+
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            updatedUser.setPassword(user.getPassword());
+        }
+
         userRepository.save(updatedUser);
     }
 

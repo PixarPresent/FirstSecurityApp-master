@@ -1,13 +1,12 @@
 package web.FirstSecurityApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.FirstSecurityApp.models.Role;
 import web.FirstSecurityApp.models.User;
-import web.FirstSecurityApp.repositories.RoleRepository;
 import web.FirstSecurityApp.services.RoleService;
 import web.FirstSecurityApp.services.UserService;
 
@@ -17,15 +16,14 @@ import java.util.*;
 public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
-
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    //TODO.html: сделать запросы на странички
 
     @GetMapping("/admin")
     public String getAllUsers(Model model) {
@@ -83,7 +81,23 @@ public class AdminController {
     }
 
     @PostMapping("/admin/edit")
-    public String updateUser(@ModelAttribute("user") User user, @RequestParam(value = "roles", required = false) List<Long> roles) {
+    public String updateUser(
+            @ModelAttribute("user") User user,
+            @RequestParam(value = "roles", required = false) List<Long> roles,
+            @RequestParam(value = "newPassword", required = false) String newPassword,
+            @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
+            Model model  // Добавьте Model для отображения ошибок
+    ) {
+
+        if (newPassword != null && !newPassword.isEmpty()) {
+            if (!newPassword.equals(confirmPassword)) {
+                model.addAttribute("passwordMismatch", "Пароли не совпадают.");
+                model.addAttribute("allRoles", roleService.getAllRoles());
+                return "adminPages/editUser";
+            }
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+
 
         Set<Role> userRoles = new HashSet<>();
 
@@ -102,7 +116,6 @@ public class AdminController {
         }
 
         user.setRoles(userRoles);
-
         userService.updateUser(user);
 
         return "redirect:/admin";
