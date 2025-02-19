@@ -10,10 +10,7 @@ import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.repositories.RoleRepository;
 import web.FirstSecurityApp.repositories.UserRepository;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,36 +27,64 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void createUser(User user, Set<Role> roles) {
-        Role userRole = roleRepository.getRoleByName("ROLE_USER");
-        if (userRole != null && !roles.contains(userRole)) {
-            roles.add(userRole);
+    public void createUser(User user) {
+        // Получаем роль по умолчанию ROLE_USER
+        Role defaultRole = roleRepository.getRoleByName("ROLE_USER");
+
+        // Создаем список ролей для пользователя
+        List<Role> roles = new ArrayList<>();
+
+        // Добавляем роль по умолчанию
+        roles.add(defaultRole);
+
+        // проверяем наличие в базе данных
+
+        for (Role role : user.getRoles()) {
+            Role existingRole = roleRepository.getRoleByName(role.getName());
+            roles.add(existingRole);
+
         }
 
-        user.setRoles(roles);
+        user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEmail(user.getEmail());
-        user.setUsername(user.getUsername());
+        user.setRoles(roles);
+
         userRepository.save(user);
     }
 
     @Override
     @Transactional
     public void updateUser(User user) {
-        User updatedUser = getUserById(user.getId());
-        updatedUser.setUsername(user.getUsername());
-        updatedUser.setRoles(user.getRoles());
+        User existingUser = userRepository.findById(user.getId()).get();
 
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            updatedUser.setPassword(user.getPassword());
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+            existingUser.setUsername(user.getUsername());
         }
 
-        userRepository.save(updatedUser);
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        List<Role> roles = new ArrayList<>();
+
+        Role defaultRole = roleRepository.getRoleByName("ROLE_USER");
+
+        roles.add(defaultRole);
+
+        for (Role role : user.getRoles()) {
+            Role existingRole = roleRepository.getRoleByName(role.getName());
+            roles.add(existingRole);
+        }
+
+        existingUser.setRoles(roles);
+
+        userRepository.save(existingUser);
     }
 
     @Override
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 
