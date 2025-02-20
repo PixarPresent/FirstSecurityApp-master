@@ -18,11 +18,4 @@ public class UserGlobalExceptionHandler extends RuntimeException {
         data.setInfo(e.getMessage());
         return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
     }
-//    @ExceptionHandler
-//    private ResponseEntity<UserIncorrectData> handleException(Exception e) {
-//        UserIncorrectData data = new UserIncorrectData();
-//        data.setInfo("Некорректный тип переданных данных");
-//        return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
-//    }
-
 }

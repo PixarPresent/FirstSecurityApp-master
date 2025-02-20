@@ -35,44 +35,44 @@ public class AdminController {
 
 
     //GET METHOD - GET ALL USERS
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userService.getAllUsers();
+    @GetMapping("/admins")
+    public ResponseEntity<List<User>>  getUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
 
     //GET METHOD - FIND USER BY ID
-    @GetMapping("/users/{id}")
-    public User showUser(@PathVariable("id") long id) {
+    @GetMapping("/admins/{id}")
+    public ResponseEntity<User> showUser(@PathVariable("id") long id) {
         User user = userService.getUserById(id);
 
         if (user == null) {
             throw new NoSuchElementException("User with id " + id + " not found");
         }
 
-        return user;
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     //POST METHOD - CREATE USERS
-    @PostMapping("/users")
-    public User createUser(@RequestBody User user) {
+    @PostMapping("/admins")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         userService.createUser(user);
-        return user;
-
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     //PUT METHOD - EDIT USERS
-    @PutMapping("/users")
-    public User updateUser(@RequestBody User user) {
+    @PutMapping("/admins")
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
         userService.updateUser(user);
-        return user;
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
 
     //DELETE METHOD DELETE USERS
-    @DeleteMapping("/users/{id}")
-        public void deleteUser(@PathVariable("id") long id) {
+    @DeleteMapping("/admins/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
         userService.deleteUserById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

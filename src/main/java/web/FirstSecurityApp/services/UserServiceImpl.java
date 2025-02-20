@@ -28,21 +28,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void createUser(User user) {
-        // Получаем роль по умолчанию ROLE_USER
+        Set<Role> roles = new HashSet<>();
+
         Role defaultRole = roleRepository.getRoleByName("ROLE_USER");
-
-        // Создаем список ролей для пользователя
-        List<Role> roles = new ArrayList<>();
-
-        // Добавляем роль по умолчанию
         roles.add(defaultRole);
-
-        // проверяем наличие в базе данных
 
         for (Role role : user.getRoles()) {
             Role existingRole = roleRepository.getRoleByName(role.getName());
             roles.add(existingRole);
-
         }
 
         user.setUsername(user.getUsername());
@@ -66,16 +59,16 @@ public class UserServiceImpl implements UserService {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        List<Role> roles = new ArrayList<>();
+        Set<Role> roles = new HashSet<>();
 
         Role defaultRole = roleRepository.getRoleByName("ROLE_USER");
-
         roles.add(defaultRole);
 
         for (Role role : user.getRoles()) {
             Role existingRole = roleRepository.getRoleByName(role.getName());
             roles.add(existingRole);
         }
+
 
         existingUser.setRoles(roles);
 
