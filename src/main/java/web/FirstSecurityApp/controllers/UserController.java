@@ -1,28 +1,26 @@
 package web.FirstSecurityApp.controllers;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import web.FirstSecurityApp.models.User;
+import web.FirstSecurityApp.services.UserService;
 
-@Controller
+import java.security.Principal;
+
+@RestController
+@RequestMapping("/api/user")
 public class UserController {
+    private final UserService userService;
 
-    @GetMapping("/user")
-    public String showUsersInfo(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-        model.addAttribute("user", user);
-        return "user";
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/welcome")
-    public String welcomePage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-        model.addAttribute("user", user);
-        return "welcome";
+    //GET METHOD - GET USER BY ID
+    @GetMapping()
+    public ResponseEntity<User> showUser(Principal principal) {
+        String username = principal.getName();
+        return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
     }
 }

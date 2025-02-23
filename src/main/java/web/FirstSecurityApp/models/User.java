@@ -1,5 +1,6 @@
 package web.FirstSecurityApp.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,14 +23,14 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
 
-    public User(String username, String password, String email, String role) {
+    public User(String username, String password, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.roles = new ArrayList<>();
+        this.roles = roles;
     }
 
     public User() {}
@@ -47,21 +48,25 @@ public class User implements UserDetails {
         return username;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return UserDetails.super.isAccountNonExpired();
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return UserDetails.super.isAccountNonLocked();
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return UserDetails.super.isCredentialsNonExpired();
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
@@ -71,10 +76,12 @@ public class User implements UserDetails {
         this.username = username;
     }
 
+    @JsonIgnore
     @Override
     public Collection<Role> getAuthorities() {
         return roles;
     }
+
 
     @Override
     public String getPassword() {
@@ -94,11 +101,11 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
