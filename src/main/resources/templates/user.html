@@ -10,9 +10,13 @@
         <div class="row p-1" style="background-color: #343A40">
             <div class="col m-3">
                 <h3 class="text-white">
-                    <strong th:text="${user.email}"></strong>
+                    <strong id="userEmail">
+                        <!-- подгружаем js -->
+                    </strong>
                     with roles:
-                    <normal th:each="role : ${user.getRoles()}" th:text="${#strings.replace(role.name, 'ROLE_', ' ')}"></normal>
+                    <span id="userRoles">
+                        <!-- подгружаем js -->
+                    </span>
                 </h3>
             </div>
 
@@ -36,6 +40,9 @@
                 </div>
             </div>
 
+
+
+
             <div class="col p-3">
                 <h1>
                     User information-page
@@ -50,19 +57,8 @@
                         <th scope="col">Role</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <th th:text="${user.id}"></th>
-                        <td th:text="${user.username}"></td>
-                        <td th:text="${user.email}"></td>
-                        <td>
-                            <span th:each="role : ${user.roles}"
-                                  th:text="${#strings.replace(role.name, 'ROLE_', '')}"
-                                  class="badge bg-secondary me-1">
-                            </span>
-                        </td>
-                    </tr>
-
+                    <tbody id="userTbody">
+                        <!-- подгружаем js -->
                     </tbody>
                 </table>
             </div>
@@ -70,5 +66,7 @@
     </div>
 
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/user.js"></script>
 </body>
 </html>

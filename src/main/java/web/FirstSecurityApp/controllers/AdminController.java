@@ -1,15 +1,11 @@
 package web.FirstSecurityApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.FirstSecurityApp.exceptions.NoSuchElementException;
-import web.FirstSecurityApp.exceptions.UserIncorrectData;
 import web.FirstSecurityApp.models.Role;
 import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.services.RoleService;
@@ -23,26 +19,27 @@ import java.util.*;
 @RequestMapping("/api")
 public class AdminController {
     private final UserService userService;
-    private final RoleService roleService;
+
     private final BCryptPasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService, BCryptPasswordEncoder passwordEncoder) {
+    public AdminController(UserService userService, BCryptPasswordEncoder passwordEncoder, RoleService roleService) {
         this.userService = userService;
-        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
 
     //GET METHOD - GET ALL USERS
-    @GetMapping("/admins")
-    public ResponseEntity<List<User>>  getUsers() {
+    @GetMapping("/admin")
+    public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
 
-    //GET METHOD - FIND USER BY ID
-    @GetMapping("/admins/{id}")
+    //GET METHOD - GET USER BY ID
+    @GetMapping("/admin/{id}")
     public ResponseEntity<User> showUser(@PathVariable("id") long id) {
         User user = userService.getUserById(id);
 
@@ -54,14 +51,14 @@ public class AdminController {
     }
 
     //POST METHOD - CREATE USERS
-    @PostMapping("/admins")
+    @PostMapping("/admin")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         userService.createUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     //PUT METHOD - EDIT USERS
-    @PutMapping("/admins")
+    @PutMapping("/admin")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         userService.updateUser(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -69,10 +66,15 @@ public class AdminController {
 
 
     //DELETE METHOD DELETE USERS
-    @DeleteMapping("/admins/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
         userService.deleteUserById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getRoles() {
+        return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
     }
 
 }
