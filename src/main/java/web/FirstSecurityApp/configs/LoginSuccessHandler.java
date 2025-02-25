@@ -7,10 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import web.FirstSecurityApp.models.Role;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Set;
 
 @Component

@@ -1,6 +1,5 @@
 const URL = "http://localhost:8080/api/admin";
 
-
 let deleteModal = null;
 let editModal = null;
 let newUserModal = null;
@@ -8,29 +7,25 @@ let newUserModal = null;
 let deleteUserId = null;
 let editUserId = null;
 
-
 async function loadUserInfo() {
     try {
-        const response = await fetch(`http://localhost:8080/api/user`, {credentials: 'include'})
+        const response = await fetch(`http://localhost:8080/api/user`, { credentials: 'include' });
+        const user = await response.json();
 
-        const user = await response.json()
+        document.getElementById("userEmail").textContent = user.email;
+        document.getElementById("userRoles").textContent = user.roles.map(role => role.name.replace("ROLE_", "")).join(', ');
 
-        document.getElementById("userEmail").textContent = user.email
-        document.getElementById("userRoles").textContent = user.roles.map(role => role.name.replace("ROLE_", "")).join(', ')
-
-        getInformationAboutUser(user)
-
+        getInformationAboutUser(user);
     } catch (error) {
-        console.error("загрузка данных не удалась")
+        console.error("Failed to load user data");
     }
 }
-
 
 function getAllUsers() {
     fetch(URL)
         .then(response => {
             if (!response.ok) {
-                throw new Error("Ошибка при загрузке данных");
+                throw new Error("Failed to load data");
             }
             return response.json();
         })
@@ -56,7 +51,7 @@ function getAllUsers() {
                 usersTable.insertAdjacentHTML('beforeend', row);
             });
         })
-        .catch(error => console.error("Ошибка при загрузке пользователей:", error));
+        .catch(error => console.error("Error loading users:", error));
 }
 
 function showDeleteModal(userId, username, email, roles) {
@@ -72,7 +67,6 @@ function showDeleteModal(userId, username, email, roles) {
     deleteModal.show();
 }
 
-
 function deleteUser() {
     if (deleteUserId) {
         fetch(`${URL}/${deleteUserId}`, {
@@ -82,17 +76,16 @@ function deleteUser() {
                 if (response.ok) {
                     getAllUsers();
                 } else {
-                    alert("Ошибка при удалении пользователя");
+                    alert("Error deleting user");
                 }
             })
-            .catch(error => console.error("Ошибка при удалении пользователя:", error))
+            .catch(error => console.error("Error deleting user:", error))
             .finally(() => {
                 deleteModal.hide();
                 deleteUserId = null;
             });
     }
 }
-
 
 function showEditModal(user) {
     editUserId = user.id;
@@ -108,8 +101,8 @@ function showEditModal(user) {
     }
     editModal.show();
 }
-function saveUserChanges() {
 
+function saveUserChanges() {
     const updatedUser = {
         id: editUserId,
         username: document.getElementById('editUserName').value,
@@ -128,7 +121,7 @@ function saveUserChanges() {
             if (response.ok) {
                 getAllUsers();
             } else {
-                alert("Ошибка при обновлении пользователя");
+                alert("Error updating user");
             }
         })
         .finally(() => {
@@ -138,19 +131,16 @@ function saveUserChanges() {
 }
 
 function showNewUserModal() {
-
     document.getElementById('newUserName').value = '';
     document.getElementById('newUserPassword').value = '';
     document.getElementById('newUserEmail').value = '';
     document.getElementById('newUserIsAdmin').checked = false;
-
 
     if (!newUserModal) {
         newUserModal = new bootstrap.Modal(document.getElementById('newUserModal'));
     }
     newUserModal.show();
 }
-
 
 function createNewUser() {
     const newUser = {
@@ -161,7 +151,7 @@ function createNewUser() {
     };
 
     if (!newUser.username || !newUser.password || !newUser.email) {
-        alert("Заполните все поля");
+        alert("Fill all fields");
         return;
     }
 
@@ -181,22 +171,21 @@ function createNewUser() {
                 document.getElementById('newUserEmail').value = '';
                 document.getElementById('newUserIsAdmin').checked = false;
             } else {
-                alert("Ошибка при создании пользователя");
+                alert("Error creating user");
             }
         })
         .catch(error => {
-            console.error("Ошибка при создании пользователя:", error);
-            alert("Произошла ошибка при создании пользователя. Подробности в консоли.");
+            console.error("Error creating user:", error);
+            alert("Error creating user. Check console for details.");
         })
         .finally(() => {
             newUserModal.hide();
         });
 }
 
-
 document.addEventListener('DOMContentLoaded', getAllUsers);
 
-loadUserInfo()
+loadUserInfo();
 
 document.getElementById('confirmDeleteButton').addEventListener('click', deleteUser);
 document.getElementById('saveEditButton').addEventListener('click', saveUserChanges);

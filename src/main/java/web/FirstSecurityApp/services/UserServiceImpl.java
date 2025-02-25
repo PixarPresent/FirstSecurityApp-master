@@ -1,33 +1,38 @@
 package web.FirstSecurityApp.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.FirstSecurityApp.dto.UserDTO;
+import web.FirstSecurityApp.mappers.UserMapper;
 import web.FirstSecurityApp.models.Role;
 import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.repositories.RoleRepository;
 import web.FirstSecurityApp.repositories.UserRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
     @Transactional
-    public void createUser(User user) {
+    public void createUser(UserDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
         Set<Role> roles = new HashSet<>();
 
         Role defaultRole = roleRepository.getRoleByName("ROLE_USER");
@@ -48,8 +53,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId()).get();
+    public void updateUser(UserDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
+        User existingUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user.getUsername() != null && !user.getUsername().isEmpty()) {
             existingUser.setUsername(user.getUsername());
@@ -69,7 +75,6 @@ public class UserServiceImpl implements UserService {
             roles.add(existingRole);
         }
 
-
         existingUser.setRoles(roles);
 
         userRepository.save(existingUser);
@@ -82,19 +87,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
+    public UserDTO getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElse(null);
+        return user.map(userMapper::toDTO).orElse(null);
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserDTO getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return userMapper.toDTO(user);
     }
 
-
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

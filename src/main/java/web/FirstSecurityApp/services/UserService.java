@@ -1,21 +1,18 @@
 package web.FirstSecurityApp.services;
 
-import org.springframework.stereotype.Service;
-import web.FirstSecurityApp.models.Role;
+import web.FirstSecurityApp.dto.UserDTO;
 import web.FirstSecurityApp.models.User;
 
 import java.util.List;
-import java.util.Set;
 
-@Service
 public interface UserService {
-    void createUser(User user);
+    void createUser(UserDTO userDTO);
 
-    void updateUser(User user);
+    void updateUser(UserDTO userDTO);
     void deleteUserById(Long id);
-    User getUserById(Long id);
-    User getUserByUsername(String username);
-    List<User> getAllUsers();
+    UserDTO getUserById(Long id);
+    UserDTO getUserByUsername(String username);
+    List<UserDTO> getAllUsers();
 
 
 }
