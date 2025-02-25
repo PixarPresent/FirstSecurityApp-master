@@ -10,12 +10,12 @@ let editUserId = null;
 async function loadUserInfo() {
     try {
         const response = await fetch(`http://localhost:8080/api/user`, { credentials: 'include' });
-        const user = await response.json();
+        const userDTO = await response.json();
 
-        document.getElementById("userEmail").textContent = user.email;
-        document.getElementById("userRoles").textContent = user.roles.map(role => role.name.replace("ROLE_", "")).join(', ');
+        document.getElementById("userEmail").textContent = userDTO.email;
+        document.getElementById("userRoles").textContent = userDTO.roles.map(role => role.name.replace("ROLE_", "")).join(', ');
 
-        getInformationAboutUser(user);
+        getInformationAboutUser(userDTO);
     } catch (error) {
         console.error("Failed to load user data");
     }
@@ -33,18 +33,18 @@ function getAllUsers() {
             const usersTable = document.querySelector('.users-table');
             usersTable.innerHTML = '';
 
-            users.forEach(user => {
+            users.forEach(userDTO => {
                 const row = `
                     <tr>
-                        <td>${user.id}</td>
-                        <td>${user.username}</td>
-                        <td>${user.email}</td>
-                        <td>${user.roles.map(role => role.name.substring(5)).join(", ")}</td>
+                        <td>${userDTO.id}</td>
+                        <td>${userDTO.username}</td>
+                        <td>${userDTO.email}</td>
+                        <td>${userDTO.roles.map(role => role.name.substring(5)).join(", ")}</td>
                         <td>
-                            <button type="button" class="btn btn-primary" onclick="showEditModal(${JSON.stringify(user).replace(/"/g, '&quot;')})">Edit</button>
+                            <button type="button" class="btn btn-primary" onclick="showEditModal(${JSON.stringify(userDTO).replace(/"/g, '&quot;')})">Edit</button>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger" onclick="showDeleteModal(${user.id}, '${user.username}', '${user.email}', '${user.roles.map(role => role.name.substring(5)).join(", ")}')">Delete</button>
+                            <button type="button" class="btn btn-danger" onclick="showDeleteModal(${userDTO.id}, '${userDTO.username}', '${userDTO.email}', '${userDTO.roles.map(role => role.name.substring(5)).join(", ")}')">Delete</button>
                         </td>
                     </tr>
                 `;
@@ -87,13 +87,13 @@ function deleteUser() {
     }
 }
 
-function showEditModal(user) {
-    editUserId = user.id;
+function showEditModal(userDTO) {
+    editUserId = userDTO.id;
 
-    document.getElementById('editUserName').value = user.username;
+    document.getElementById('editUserName').value = userDTO.username;
     document.getElementById('editUserPassword').value = '';
 
-    const isAdmin = user.roles.some(role => role.name === 'ROLE_ADMIN');
+    const isAdmin = userDTO.roles.some(role => role.name === 'ROLE_ADMIN');
     document.getElementById('editUserIsAdmin').checked = isAdmin;
 
     if (!editModal) {
@@ -107,7 +107,7 @@ function saveUserChanges() {
         id: editUserId,
         username: document.getElementById('editUserName').value,
         password: document.getElementById('editUserPassword').value,
-        roles: document.getElementById('editUserIsAdmin').checked ? ['ROLE_ADMIN'] : ['ROLE_USER']
+        roles: document.getElementById('editUserIsAdmin').checked ? [{ name: 'ROLE_ADMIN' }] : [{ name: 'ROLE_USER' }]
     };
 
     fetch(URL, {
@@ -147,7 +147,7 @@ function createNewUser() {
         username: document.getElementById('newUserName').value,
         password: document.getElementById('newUserPassword').value,
         email: document.getElementById('newUserEmail').value,
-        roles: document.getElementById('newUserIsAdmin').checked ? ['ROLE_ADMIN'] : ['ROLE_USER']
+        roles: document.getElementById('newUserIsAdmin').checked ? [{ name: 'ROLE_ADMIN' }] : [{ name: 'ROLE_USER' }]
     };
 
     if (!newUser.username || !newUser.password || !newUser.email) {

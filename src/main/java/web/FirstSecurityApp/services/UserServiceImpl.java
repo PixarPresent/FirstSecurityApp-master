@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.FirstSecurityApp.dto.RoleDTO;
 import web.FirstSecurityApp.dto.UserDTO;
 import web.FirstSecurityApp.mappers.UserMapper;
 import web.FirstSecurityApp.models.Role;
@@ -38,8 +39,8 @@ public class UserServiceImpl implements UserService {
         Role defaultRole = roleRepository.getRoleByName("ROLE_USER");
         roles.add(defaultRole);
 
-        for (Role role : user.getRoles()) {
-            Role existingRole = roleRepository.getRoleByName(role.getName());
+        for (RoleDTO roleDTO : userDTO.getRoles()) {
+            Role existingRole = roleRepository.getRoleByName(roleDTO.getName());
             roles.add(existingRole);
         }
 
@@ -70,8 +71,8 @@ public class UserServiceImpl implements UserService {
         Role defaultRole = roleRepository.getRoleByName("ROLE_USER");
         roles.add(defaultRole);
 
-        for (Role role : user.getRoles()) {
-            Role existingRole = roleRepository.getRoleByName(role.getName());
+        for (RoleDTO roleDTO : userDTO.getRoles()) {
+            Role existingRole = roleRepository.getRoleByName(roleDTO.getName());
             roles.add(existingRole);
         }
 

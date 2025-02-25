@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import web.FirstSecurityApp.dto.UserDTO;
 import web.FirstSecurityApp.exceptions.NoSuchElementException;
 import web.FirstSecurityApp.models.Role;
+import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.services.RoleService;
 import web.FirstSecurityApp.services.UserService;
 
