@@ -25,6 +25,9 @@ public class User implements UserDetails {
     )
     private Set<Role> roles;
 
+    @Column(name = "avatar_path")
+    private String avatarPath;
+
 
     public User(String username, String password, String email, Set<Role> roles) {
         this.username = username;
@@ -109,6 +112,15 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+
+    // геттеры/сеттеры
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
 
     @Override
     public String toString() {

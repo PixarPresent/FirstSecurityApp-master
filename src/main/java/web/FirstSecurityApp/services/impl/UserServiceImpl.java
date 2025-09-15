@@ -1,4 +1,4 @@
-package web.FirstSecurityApp.services;
+package web.FirstSecurityApp.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +11,7 @@ import web.FirstSecurityApp.models.Role;
 import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.repositories.RoleRepository;
 import web.FirstSecurityApp.repositories.UserRepository;
+import web.FirstSecurityApp.services.UserService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -94,8 +95,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+    public UserDTO getUserByUsername(String username) throws UserNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
         return userMapper.toDTO(user);
     }
 
