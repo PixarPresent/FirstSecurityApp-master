@@ -34,17 +34,28 @@ function getAllUsers() {
             usersTable.innerHTML = '';
 
             users.forEach(userDTO => {
+                const roles = userDTO.roles.map(role => role.name.substring(5)).join(", ");
+                const roleBadges = userDTO.roles.map(role => {
+                    const roleName = role.name.substring(5);
+                    const badgeClass = roleName === 'ADMIN' ? 'badge bg-danger' : 'badge bg-primary';
+                    return `<span class="${badgeClass}">${roleName}</span>`;
+                }).join(' ');
+                
                 const row = `
                     <tr>
-                        <td>${userDTO.id}</td>
+                        <td><strong>#${userDTO.id}</strong></td>
                         <td>${userDTO.username}</td>
                         <td>${userDTO.email}</td>
-                        <td>${userDTO.roles.map(role => role.name.substring(5)).join(", ")}</td>
-                        <td>
-                            <button type="button" class="btn btn-primary" onclick="showEditModal(${JSON.stringify(userDTO).replace(/"/g, '&quot;')})">Edit</button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger" onclick="showDeleteModal(${userDTO.id}, '${userDTO.username}', '${userDTO.email}', '${userDTO.roles.map(role => role.name.substring(5)).join(", ")}')">Delete</button>
+                        <td>${roleBadges}</td>
+                        <td class="text-center">
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-action btn-edit" onclick="showEditModal(${JSON.stringify(userDTO).replace(/"/g, '&quot;')})">
+                                    <i class="bi bi-pencil-square me-1"></i>Edit
+                                </button>
+                                <button type="button" class="btn btn-action btn-delete" onclick="showDeleteModal(${userDTO.id}, '${userDTO.username}', '${userDTO.email}', '${roles}')">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `;
