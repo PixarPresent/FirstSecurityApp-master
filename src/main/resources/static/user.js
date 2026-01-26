@@ -20,9 +20,9 @@ function getInformationAboutUser(userDTO) {
         <div class="col-md-6 col-lg-3">
             <div class="info-card">
                 <div class="info-label">
-                    <i class="bi bi-hash me-1"></i>User ID
+                    <i class="bi bi-hash me-1"></i>ID
                 </div>
-                <div class="info-value">#${userDTO.id}</div>
+                <div class="info-value"># ${userDTO.id}</div>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">

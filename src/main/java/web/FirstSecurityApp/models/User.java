@@ -28,6 +28,12 @@ public class User implements UserDetails {
     @Column(name = "avatar_path")
     private String avatarPath;
 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
 
     public User(String username, String password, String email, Set<Role> roles) {
         this.username = username;
@@ -120,6 +126,42 @@ public class User implements UserDetails {
 
     public void setAvatarPath(String avatarPath) {
         this.avatarPath = avatarPath;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setAuthor(this);
+    }
+
+    public void removePost(Post post) {
+        posts.remove(post);
+        post.setAuthor(null);
+    }
+
+    public void addLike(Like like) {
+        likes.add(like);
+        like.setUser(this);
+    }
+
+    public void removeLike(Like like) {
+        likes.remove(like);
+        like.setUser(null);
     }
 
     @Override
