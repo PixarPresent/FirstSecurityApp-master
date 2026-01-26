@@ -51,6 +51,8 @@ public class WebSecurityConfig   {
                 .and()
 
                 .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/process_login")
                 .failureUrl("/login?error=true")
                 .successHandler(loginSuccessHandler)
 
