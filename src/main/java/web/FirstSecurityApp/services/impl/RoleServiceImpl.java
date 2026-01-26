@@ -1,12 +1,11 @@
-package web.FirstSecurityApp.services;
+package web.FirstSecurityApp.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import web.FirstSecurityApp.models.Role;
 import web.FirstSecurityApp.repositories.RoleRepository;
+import web.FirstSecurityApp.services.RoleService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

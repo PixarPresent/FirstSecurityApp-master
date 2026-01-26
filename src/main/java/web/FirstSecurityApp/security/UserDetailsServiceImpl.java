@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.repositories.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
@@ -19,17 +21,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
 
-    private User findUserByUsername(String username) {
+    private Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findUserByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Username " + username + " not found");
-        }
-        return user;
+        return findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
     }
 }
