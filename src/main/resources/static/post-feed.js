@@ -7,6 +7,7 @@ class PostFeed {
         this.currentPage = 0;
         this.pageSize = 10;
         this.isLoading = false;
+        this.viewMode = 'compact'; // 'compact' or 'card'
         this.init();
     }
 
@@ -14,6 +15,8 @@ class PostFeed {
         console.log('PostFeed init method called');
         this.loadPosts();
         this.setupCreatePostForm();
+        this.setupViewModeToggle();
+        this.loadViewModePreference();
         // Removed infinite scroll and auto-refresh for performance
     }
 
@@ -590,6 +593,50 @@ class PostFeed {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    setupViewModeToggle() {
+        const compactBtn = document.getElementById('compactViewBtn');
+        const cardBtn = document.getElementById('cardViewBtn');
+
+        if (compactBtn && cardBtn) {
+            compactBtn.addEventListener('click', () => {
+                this.setViewMode('compact');
+            });
+
+            cardBtn.addEventListener('click', () => {
+                this.setViewMode('card');
+            });
+        }
+    }
+
+    setViewMode(mode) {
+        this.viewMode = mode;
+        
+        // Update button states
+        const compactBtn = document.getElementById('compactViewBtn');
+        const cardBtn = document.getElementById('cardViewBtn');
+        
+        if (compactBtn && cardBtn) {
+            compactBtn.classList.toggle('active', mode === 'compact');
+            cardBtn.classList.toggle('active', mode === 'card');
+        }
+
+        // Update post items
+        const postItems = document.querySelectorAll('.post-item');
+        postItems.forEach(item => {
+            item.classList.toggle('compact', mode === 'compact');
+        });
+
+        // Save preference to localStorage
+        localStorage.setItem('postFeedViewMode', mode);
+    }
+
+    loadViewModePreference() {
+        const savedMode = localStorage.getItem('postFeedViewMode');
+        if (savedMode && (savedMode === 'compact' || savedMode === 'card')) {
+            this.setViewMode(savedMode);
+        }
     }
 }
 

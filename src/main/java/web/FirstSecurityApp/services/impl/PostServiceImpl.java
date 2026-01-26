@@ -1,9 +1,7 @@
 package web.FirstSecurityApp.services.impl;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,12 +12,10 @@ import web.FirstSecurityApp.dto.PostRequest;
 import web.FirstSecurityApp.dto.PostResponse;
 import web.FirstSecurityApp.dto.UserResponse;
 import web.FirstSecurityApp.exceptions.UserIncorrectData;
-import web.FirstSecurityApp.models.Like;
 import web.FirstSecurityApp.models.Media;
 import web.FirstSecurityApp.models.Post;
 import web.FirstSecurityApp.models.User;
 import web.FirstSecurityApp.repositories.LikeRepository;
-import web.FirstSecurityApp.repositories.MediaRepository;
 import web.FirstSecurityApp.repositories.PostRepository;
 import web.FirstSecurityApp.repositories.UserRepository;
 import web.FirstSecurityApp.services.MediaService;
