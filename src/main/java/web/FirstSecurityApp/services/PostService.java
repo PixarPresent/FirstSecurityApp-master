@@ -2,6 +2,7 @@ package web.FirstSecurityApp.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 import web.FirstSecurityApp.dto.PostRequest;
 import web.FirstSecurityApp.dto.PostResponse;
 import web.FirstSecurityApp.models.Post;
@@ -15,6 +16,8 @@ public interface PostService {
     Page<PostResponse> getMyPosts(Pageable pageable, String currentUsername);
     
     PostResponse createPost(PostRequest postRequest, String currentUsername);
+    
+    PostResponse createPostWithMedia(String content, MultipartFile[] files, String currentUsername);
     
     PostResponse updatePost(Long id, PostRequest postRequest, String currentUsername);
     

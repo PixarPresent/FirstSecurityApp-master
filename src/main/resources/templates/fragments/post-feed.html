@@ -1,0 +1,48 @@
+<!-- Post Feed Fragment - Add this to user.html main content section -->
+
+<!-- Add these links to the head section -->
+<link rel="stylesheet" href="/post-feed.css">
+
+<!-- Add this script before closing body tag -->
+<script src="/post-feed.js"></script>
+
+<!-- Add this HTML inside the main-content div, after the existing content -->
+<div class="post-feed-container">
+    <!-- Create Post Section -->
+    <div class="create-post-card">
+        <h5 class="mb-3">
+            <i class="bi bi-pencil-square me-2"></i>Create a Post
+        </h5>
+        <textarea 
+            id="createPostTextarea" 
+            class="create-post-textarea" 
+            placeholder="What's on your mind?"
+            maxlength="1000"></textarea>
+        
+        <!-- File Upload Section -->
+        <div class="file-upload-section">
+            <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+            <label for="fileInput" class="file-input-label">
+                <i class="bi bi-image me-2"></i>Add Photos
+            </label>
+        </div>
+        
+        <!-- File Preview -->
+        <div id="filePreview" class="file-preview"></div>
+        
+        <div class="create-post-actions">
+            <span id="charCounter" class="char-counter">0/1000</span>
+            <button id="createPostBtn" class="btn-create-post" disabled>
+                <i class="bi bi-send me-2"></i>Post
+            </button>
+        </div>
+    </div>
+
+    <!-- Posts Container -->
+    <div id="postsContainer">
+        <!-- Posts will be loaded here dynamically -->
+        <div class="loading-spinner">
+            <i class="bi bi-arrow-clockwise"></i>
+        </div>
+    </div>
+</div>

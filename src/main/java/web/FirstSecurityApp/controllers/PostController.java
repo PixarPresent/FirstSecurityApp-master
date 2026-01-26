@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import web.FirstSecurityApp.dto.PostRequest;
 import web.FirstSecurityApp.dto.PostResponse;
+import web.FirstSecurityApp.services.MediaService;
 import web.FirstSecurityApp.services.PostService;
 
 @RestController
@@ -19,9 +21,11 @@ import web.FirstSecurityApp.services.PostService;
 public class PostController {
 
     private final PostService postService;
+    private final MediaService mediaService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, MediaService mediaService) {
         this.postService = postService;
+        this.mediaService = mediaService;
     }
 
     @GetMapping
@@ -63,6 +67,17 @@ public class PostController {
         
         String currentUsername = authentication.getName();
         PostResponse createdPost = postService.createPost(postRequest, currentUsername);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
+    }
+
+    @PostMapping(value = "/with-media", consumes = "multipart/form-data")
+    public ResponseEntity<PostResponse> createPostWithMedia(
+            @RequestPart("content") String content,
+            @RequestPart(value = "files", required = false) MultipartFile[] files,
+            Authentication authentication) {
+        
+        String currentUsername = authentication.getName();
+        PostResponse createdPost = postService.createPostWithMedia(content, files, currentUsername);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
     }
 

@@ -3,6 +3,7 @@ package web.FirstSecurityApp.dto;
 import web.FirstSecurityApp.models.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PostResponse {
     private Long id;
@@ -12,11 +13,13 @@ public class PostResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isLikedByCurrentUser;
+    private List<MediaResponse> mediaFiles;
 
     public PostResponse() {}
 
     public PostResponse(Long id, String content, UserResponse author, long likeCount, 
-                       LocalDateTime createdAt, LocalDateTime updatedAt, boolean isLikedByCurrentUser) {
+                       LocalDateTime createdAt, LocalDateTime updatedAt, boolean isLikedByCurrentUser, 
+                       List<MediaResponse> mediaFiles) {
         this.id = id;
         this.content = content;
         this.author = author;
@@ -24,6 +27,7 @@ public class PostResponse {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isLikedByCurrentUser = isLikedByCurrentUser;
+        this.mediaFiles = mediaFiles;
     }
 
     public Long getId() {
@@ -80,5 +84,13 @@ public class PostResponse {
 
     public void setLikedByCurrentUser(boolean likedByCurrentUser) {
         isLikedByCurrentUser = likedByCurrentUser;
+    }
+
+    public List<MediaResponse> getMediaFiles() {
+        return mediaFiles;
+    }
+
+    public void setMediaFiles(List<MediaResponse> mediaFiles) {
+        this.mediaFiles = mediaFiles;
     }
 }

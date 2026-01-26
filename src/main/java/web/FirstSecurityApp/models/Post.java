@@ -25,6 +25,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Media> mediaFiles = new ArrayList<>();
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -72,6 +75,14 @@ public class Post {
         this.likes = likes;
     }
 
+    public List<Media> getMediaFiles() {
+        return mediaFiles;
+    }
+
+    public void setMediaFiles(List<Media> mediaFiles) {
+        this.mediaFiles = mediaFiles;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -96,6 +107,16 @@ public class Post {
     public void removeLike(Like like) {
         likes.remove(like);
         like.setPost(null);
+    }
+
+    public void addMedia(Media media) {
+        mediaFiles.add(media);
+        media.setPost(this);
+    }
+
+    public void removeMedia(Media media) {
+        mediaFiles.remove(media);
+        media.setPost(null);
     }
 
     @Override

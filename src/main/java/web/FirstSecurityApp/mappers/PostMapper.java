@@ -23,7 +23,8 @@ public class PostMapper {
                 likeCount,
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                isLikedByCurrentUser
+                isLikedByCurrentUser,
+                null
         );
     }
 

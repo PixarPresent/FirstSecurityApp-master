@@ -13,38 +13,22 @@ import web.FirstSecurityApp.models.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
     
-    Optional<Like> findByPostAndUser(Post post, User user);
+    Optional<Like> findByUserAndPost(User user, Post post);
     
     boolean existsByPostAndUser(Post post, User user);
     
-    List<Like> findByPost(Post post);
-    
-    Page<Like> findByPost(Post post, Pageable pageable);
-    
-    List<Like> findByUser(User user);
-    
-    Page<Like> findByUser(User user, Pageable pageable);
+    @Query("SELECT l.user FROM Like l WHERE l.post = :post")
+    Set<User> findUsersByPost(@Param("post") Post post);
     
     @Query("SELECT COUNT(l) FROM Like l WHERE l.post = :post")
-    long countByPost(@Param("post") Post post);
-    
-    @Query("SELECT COUNT(l) FROM Like l WHERE l.user = :user")
-    long countByUser(@Param("user") User user);
+    int countByPost(@Param("post") Post post);
     
     @Modifying
     @Query("DELETE FROM Like l WHERE l.post = :post AND l.user = :user")
     void deleteByPostAndUser(@Param("post") Post post, @Param("user") User user);
-    
-    @Query("SELECT l FROM Like l LEFT JOIN FETCH l.post LEFT JOIN FETCH l.user WHERE l.post.id = :postId")
-    List<Like> findByPostIdWithUser(@Param("postId") Long postId);
-    
-    @Query("SELECT l FROM Like l LEFT JOIN FETCH l.post LEFT JOIN FETCH l.user WHERE l.user.id = :userId")
-    List<Like> findByUserIdWithPost(@Param("userId") Long userId);
-    
-    @Query("SELECT l FROM Like l LEFT JOIN FETCH l.post LEFT JOIN FETCH l.user WHERE l.post.id = :postId AND l.user.id = :userId")
-    Optional<Like> findByPostIdAndUserId(@Param("postId") Long postId, @Param("userId") Long userId);
 }
