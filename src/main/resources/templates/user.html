@@ -7,40 +7,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/x-theme.css">
     <link rel="stylesheet" href="/post-feed.css">
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --dark-bg: #1a1d29;
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --card-hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        [data-theme="dark"] {
-            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --card-hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
-        }
-
-        * {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        [data-theme="dark"] body {
-            background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
-            color: #e0e0e0;
-        }
-
         .navbar-modern {
-            background: var(--primary-gradient) !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 1.2rem 0;
+            background: var(--x-bg) !important;
+            border-bottom: 1px solid var(--x-border);
+            box-shadow: none;
+            padding: 0.75rem 1rem;
         }
 
         .navbar-modern .navbar-brand {
@@ -51,10 +25,10 @@
         }
 
         .user-info-header {
-            color: white;
+            color: var(--x-text);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: var(--x-space-2);
         }
 
         .user-info-header i {
@@ -63,108 +37,85 @@
 
         .role-badge {
             display: inline-block;
-            padding: 0.35rem 0.85rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            margin-left: 0.5rem;
+            padding: 0.15rem 0.6rem;
+            border-radius: var(--x-radius-full);
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: var(--x-primary-soft);
+            color: var(--x-primary);
+            margin-left: var(--x-space-2);
         }
 
         .sidebar {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
         }
 
-        [data-theme="dark"] .sidebar {
-            background: #2d3142;
-            color: #e0e0e0;
+        .left-sidebar-col {
+            position: sticky;
+            top: 72px; /* примерно высота навбара */
+            align-self: flex-start;
+            height: calc(100vh - 72px);
         }
 
         .sidebar .nav-link {
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 0.5rem;
-            border-radius: 10px;
-            color: #495057;
-            font-weight: 500;
+            padding: 0.75rem 0.9rem;
+            margin-bottom: 0.35rem;
+            border-radius: var(--x-radius-full);
+            color: var(--x-text);
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="dark"] .sidebar .nav-link {
-            color: #b0b0b0;
-        }
-
-        .sidebar .nav-link:hover {
-            background: var(--primary-gradient);
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .sidebar .nav-link.active {
-            background: var(--primary-gradient);
-            color: white;
         }
 
         .sidebar .nav-link i {
-            font-size: 1.1rem;
+            font-size: 1.35rem;
+        }
+
+        .sidebar .nav-link:hover {
+            background: var(--x-hover);
+            color: var(--x-primary);
+            transform: none;
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--x-primary);
+            color: #ffffff;
         }
 
         .main-content {
-            background: white;
-            border-radius: 15px;
-            padding: 2.5rem;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 2rem;
-        }
-
-        [data-theme="dark"] .main-content {
-            background: #2d3142;
-            color: #e0e0e0;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            margin-bottom: 0;
         }
 
         .page-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 2rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--x-text);
+            margin-bottom: 1rem;
         }
 
         .info-card {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            background: transparent;
             border: none;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="dark"] .info-card {
-            background: linear-gradient(135deg, #667eea25 0%, #764ba225 100%);
-        }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--card-hover-shadow);
+            border-radius: 0;
+            padding: 0.75rem 0;
+            margin-bottom: 0.5rem;
+            box-shadow: none;
+            border-bottom: 1px solid var(--x-border);
         }
 
         .info-label {
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #6c757d;
+            color: var(--x-text-subtle);
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
@@ -176,41 +127,37 @@
         .info-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #212529;
-        }
-
-        [data-theme="dark"] .info-value {
-            color: #e0e0e0;
+            color: var(--x-text);
         }
 
         .info-value.role {
             display: inline-block;
-            padding: 0.5rem 1.25rem;
-            background: var(--primary-gradient);
-            color: white;
-            border-radius: 25px;
-            font-size: 1rem;
-            margin-top: 0.5rem;
+            padding: 0.25rem 0.9rem;
+            background: var(--x-primary-soft);
+            color: var(--x-primary);
+            border-radius: var(--x-radius-full);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
         }
 
         .btn-modern {
-            border-radius: 10px;
-            padding: 0.6rem 1.5rem;
-            font-weight: 600;
-            border: none;
-            transition: all 0.3s ease;
+            border-radius: var(--x-radius-full);
+            padding: 0.45rem 1.1rem;
+            font-weight: 700;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
         }
 
         .btn-logout {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            background: var(--x-primary);
+            color: #ffffff;
+            box-shadow: none;
         }
 
         .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
-            color: white;
+            background: var(--x-primary-hover);
+            color: #ffffff;
+            transform: none;
         }
 
         .stats-grid {
@@ -222,24 +169,21 @@
 
         .stat-item {
             text-align: center;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        [data-theme="dark"] .stat-item {
-            background: #2d3142;
-            color: #e0e0e0;
+            padding: 1rem;
+            background: transparent;
+            border-radius: var(--x-radius-md);
+            box-shadow: none;
+            border: 1px solid var(--x-border);
+            color: var(--x-text);
         }
 
         .theme-toggle {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--x-border);
+            color: var(--x-text);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--x-radius-full);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -249,8 +193,8 @@
         }
 
         .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+            background: var(--x-hover);
+            transform: none;
         }
 
         .theme-toggle i {
@@ -258,12 +202,14 @@
         }
 
         .stat-icon {
-            font-size: 2.5rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 1.8rem;
+            color: var(--x-primary);
             margin-bottom: 0.5rem;
+        }
+
+        .right-sidebar {
+            position: sticky;
+            top: 72px; /* ниже навбара */
         }
 
         @media (max-width: 768px) {
@@ -308,9 +254,9 @@
     </nav>
 
     <div class="container-fluid px-4 py-4">
-        <div class="row">
-            <!-- Sidebar Navigation -->
-            <div class="col-lg-3 col-md-4 mb-4">
+        <div class="row justify-content-center" style="max-width: 1320px; margin: 0 auto;">
+            <!-- Left Navigation (fixed like Twitter sidebar) -->
+            <div class="col-xl-3 col-lg-3 d-none d-lg-block left-sidebar-col">
                 <div class="sidebar">
                     <div class="d-flex flex-column">
                         <a href="/user" class="nav-link active">
@@ -326,72 +272,26 @@
                 </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="col-lg-9 col-md-8">
+            <!-- Center Column: main feed -->
+            <div class="col-xl-6 col-lg-8 col-md-12">
                 <div class="main-content">
                     <h1 class="page-title">
                         <i class="bi bi-person-badge me-2"></i>User Dashboard
                     </h1>
 
-                    <!-- User Information Cards -->
-                    <div class="row" id="userInfoCards">
-                        <!-- подгружаем js -->
-                    </div>
-
-                    <!-- Stats Grid -->
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <i class="bi bi-person-check"></i>
-                            </div>
-                            <div class="info-label">Status</div>
-                            <div class="info-value" style="font-size: 1rem; color: #28a745;">
-                                <i class="bi bi-check-circle me-1"></i>Active
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-icon">
-                                <i class="bi bi-shield-check"></i>
-                            </div>
-                            <div class="info-label">Security</div>
-                            <div class="info-value" style="font-size: 1rem; color: #17a2b8;">
-                                <i class="bi bi-lock me-1"></i>Protected
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Post Feed Section -->
+                    <!-- Post Feed Section (без верхнего блока News Feed) -->
                     <div class="post-feed-container">
-                        <!-- Feed Controls -->
-                        <div class="feed-controls mb-4">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-chat-dots me-2"></i>News Feed
-                                </h5>
-                                <div class="feed-view-toggle">
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-outline-primary btn-sm active" id="compactViewBtn" title="Compact View">
-                                            <i class="bi bi-list-ul"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-outline-primary btn-sm" id="cardViewBtn" title="Card View">
-                                            <i class="bi bi-card-text"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Create Post Section -->
                         <div class="create-post-card">
                             <h5 class="mb-3">
                                 <i class="bi bi-pencil-square me-2"></i>Create a Post
                             </h5>
-                            <textarea 
-                                id="createPostTextarea" 
-                                class="create-post-textarea" 
+                            <textarea
+                                id="createPostTextarea"
+                                class="create-post-textarea"
                                 placeholder="What's on your mind?"
                                 maxlength="1000"></textarea>
-                            
+
                             <!-- File Upload Section -->
                             <div class="file-upload-section">
                                 <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
@@ -399,10 +299,10 @@
                                     <i class="bi bi-image me-2"></i>Add Photos
                                 </label>
                             </div>
-                            
+
                             <!-- File Preview -->
                             <div id="filePreview" class="file-preview"></div>
-                            
+
                             <div class="create-post-actions">
                                 <span id="charCounter" class="char-counter">0/1000</span>
                                 <button id="createPostBtn" class="btn-create-post" disabled>
@@ -420,6 +320,18 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Right Column: user info & stats (fixed like Twitter widgets) -->
+            <div class="col-xl-3 d-none d-xl-block">
+                <aside class="right-sidebar">
+                    <h5 class="mb-3">Your profile</h5>
+
+                    <!-- User Information Cards (JS will fill this) -->
+                    <div id="userInfoCards">
+                        <!-- подгружаем js -->
+                    </div>
+                </aside>
             </div>
         </div>
     </div>

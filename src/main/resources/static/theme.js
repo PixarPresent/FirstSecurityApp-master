@@ -5,9 +5,11 @@
     const LIGHT_THEME = 'light';
 
     function initTheme() {
-        const savedTheme = localStorage.getItem(THEME_KEY) || LIGHT_THEME;
-        applyTheme(savedTheme);
-        updateThemeToggle(savedTheme);
+        // Dark-first: if user hasn't chosen, default to dark
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        const initialTheme = savedTheme || DARK_THEME;
+        applyTheme(initialTheme);
+        updateThemeToggle(initialTheme);
     }
 
     function applyTheme(theme) {

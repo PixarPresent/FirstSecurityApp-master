@@ -1,0 +1,368 @@
+/* X/Twitter-style design system (dark-first)
+   - Uses 4px spacing scale
+   - Overrides existing template classes without changing behavior
+*/
+
+:root {
+  /* Spacing (4px base unit) */
+  --x-space-1: 4px;
+  --x-space-2: 8px;
+  --x-space-3: 12px;
+  --x-space-4: 16px;
+  --x-space-5: 20px;
+  --x-space-6: 24px;
+  --x-space-8: 32px;
+  --x-space-10: 40px;
+
+  /* Radii */
+  --x-radius-full: 9999px;
+  --x-radius-md: 12px;
+  --x-radius-lg: 16px;
+
+  /* Motion */
+  --x-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --x-fast: 150ms;
+  --x-med: 220ms;
+
+  /* Typography */
+  font-size: 15px; /* Twitter base size */
+
+  /* Light theme (kept for toggle) */
+  --x-bg: #ffffff;
+  --x-surface: #f7f9f9;
+  --x-card: #ffffff;
+  --x-text: #0f1419;
+  --x-text-secondary: #536471;
+  --x-text-subtle: #71767b;
+  --x-border: #e1e8ed;
+  --x-border-strong: #cfd9de;
+  --x-hover: rgba(15, 20, 25, 0.06);
+
+  --x-primary: #1d9bf0;
+  --x-primary-hover: #1a8cd8;
+  --x-primary-soft: rgba(29, 155, 240, 0.15);
+
+  --x-danger: #f4212e;
+  --x-danger-soft: rgba(244, 33, 46, 0.15);
+
+  /* Back-compat for existing CSS (remove gradients visually) */
+  --primary-gradient: linear-gradient(135deg, var(--x-primary) 0%, var(--x-primary) 100%);
+  --secondary-gradient: linear-gradient(135deg, var(--x-primary) 0%, var(--x-primary) 100%);
+  --danger-gradient: linear-gradient(135deg, var(--x-danger) 0%, var(--x-danger) 100%);
+}
+
+[data-theme="dark"] {
+  --x-bg: #000000;
+  --x-surface: #16181c;
+  --x-card: #16181c;
+  --x-text: #e7e9ea;
+  --x-text-secondary: #8b98a5;
+  --x-text-subtle: #71767b;
+  --x-border: #2f3336;
+  --x-border-strong: #3b3f44;
+  --x-hover: #080808;
+
+  --x-primary: #1d9bf0;
+  --x-primary-hover: #1a8cd8;
+  --x-primary-soft: rgba(29, 155, 240, 0.18);
+
+  --x-danger: #f4212e;
+  --x-danger-soft: rgba(244, 33, 46, 0.24);
+}
+
+/* Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--x-bg) !important;
+  color: var(--x-text);
+  font-family: TwitterChirp, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Keep transitions subtle (Twitter is not overly animated) */
+* {
+  transition:
+    background-color var(--x-fast) var(--x-ease),
+    color var(--x-fast) var(--x-ease),
+    border-color var(--x-fast) var(--x-ease),
+    box-shadow var(--x-fast) var(--x-ease),
+    transform var(--x-fast) var(--x-ease);
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+}
+
+/* Layout: 3-column shell */
+.x-shell {
+  width: 100%;
+  max-width: 1260px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 275px minmax(0, 600px) minmax(0, 350px);
+  gap: 0;
+  min-height: 100vh;
+}
+
+.x-left {
+  padding: var(--x-space-4) var(--x-space-3);
+  border-right: 1px solid var(--x-border);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.x-center {
+  border-right: 1px solid var(--x-border);
+  min-height: 100vh;
+}
+
+.x-right {
+  padding: var(--x-space-4) var(--x-space-4);
+}
+
+/* Center header (Twitter-style) */
+.x-center-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--x-bg) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--x-border);
+  padding: var(--x-space-3) var(--x-space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.x-center-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* Re-style existing top navbar as minimal (if left in templates) */
+.navbar-modern.navbar {
+  background: var(--x-bg) !important;
+  border-bottom: 1px solid var(--x-border);
+  padding: var(--x-space-2) var(--x-space-4);
+  box-shadow: none !important;
+}
+
+.user-info-header {
+  color: var(--x-text) !important;
+  font-weight: 600;
+  gap: var(--x-space-2);
+}
+
+.role-badge {
+  background: var(--x-primary-soft) !important;
+  color: var(--x-primary) !important;
+  border-radius: var(--x-radius-full) !important;
+  padding: 2px 10px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+}
+
+/* Buttons */
+.x-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--x-space-2);
+  border-radius: var(--x-radius-full);
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--x-text);
+  cursor: pointer;
+}
+
+.x-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.x-btn-primary {
+  background: var(--x-primary);
+  color: #ffffff;
+}
+.x-btn-primary:hover:not(:disabled) {
+  background: var(--x-primary-hover);
+}
+
+.x-btn-outline {
+  border-color: var(--x-border);
+  background: transparent;
+  color: var(--x-text);
+}
+.x-btn-outline:hover:not(:disabled) {
+  background: var(--x-hover);
+}
+
+.theme-toggle {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: var(--x-radius-full) !important;
+  border: 1px solid var(--x-border) !important;
+  background: transparent !important;
+  color: var(--x-text) !important;
+  box-shadow: none !important;
+}
+.theme-toggle:hover {
+  background: var(--x-hover) !important;
+  transform: none !important;
+}
+
+/* Left nav (override existing .sidebar/.nav-link) */
+.sidebar {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  position: static !important;
+  top: auto !important;
+}
+
+.sidebar .nav-link {
+  padding: 12px 14px !important;
+  margin-bottom: var(--x-space-2) !important;
+  border-radius: var(--x-radius-full) !important;
+  color: var(--x-text) !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--x-space-3) !important;
+  transform: none !important;
+}
+
+.sidebar .nav-link i {
+  font-size: 1.35rem !important;
+}
+
+.sidebar .nav-link:hover {
+  background: var(--x-hover) !important;
+  color: var(--x-primary) !important;
+}
+
+.sidebar .nav-link.active {
+  background: var(--x-primary) !important;
+  color: #ffffff !important;
+}
+
+/* Main content container overrides */
+.main-content {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  margin-bottom: 0 !important;
+}
+
+.page-title {
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  color: var(--x-text) !important;
+  margin: 0 !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+/* Card / widget on right column */
+.x-widget {
+  background: var(--x-card);
+  border: 1px solid var(--x-border);
+  border-radius: var(--x-radius-lg);
+  padding: var(--x-space-4);
+  margin-bottom: var(--x-space-4);
+}
+
+.x-widget-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: var(--x-space-3);
+}
+
+.x-muted {
+  color: var(--x-text-subtle);
+}
+
+/* Inputs (Twitter-like) */
+.x-input {
+  width: 100%;
+  border-radius: var(--x-radius-full);
+  border: 1px solid var(--x-border);
+  background: var(--x-card);
+  color: var(--x-text);
+  padding: 10px 14px;
+  outline: none;
+}
+.x-input:focus {
+  border-color: var(--x-primary);
+  box-shadow: 0 0 0 4px var(--x-primary-soft);
+}
+
+/* Bootstrap compatibility tweaks */
+.btn.btn-logout,
+.btn.btn-new-user,
+.btn.btn-action {
+  border-radius: var(--x-radius-full) !important;
+}
+
+/* Table + modal defaults for dark */
+[data-theme="dark"] .modal-content {
+  background: var(--x-card) !important;
+  color: var(--x-text) !important;
+  border: 1px solid var(--x-border) !important;
+  border-radius: var(--x-radius-lg) !important;
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+  border-color: var(--x-border) !important;
+}
+
+[data-theme="dark"] .form-control {
+  background: var(--x-card) !important;
+  border-color: var(--x-border) !important;
+  color: var(--x-text) !important;
+}
+
+[data-theme="dark"] .form-control:focus {
+  border-color: var(--x-primary) !important;
+  box-shadow: 0 0 0 4px var(--x-primary-soft) !important;
+}
+
+/* Responsive: collapse to single column */
+@media (max-width: 992px) {
+  .x-shell {
+    grid-template-columns: 1fr;
+  }
+  .x-left,
+  .x-right {
+    display: none;
+  }
+  .x-center {
+    border-right: none;
+  }
+}
+

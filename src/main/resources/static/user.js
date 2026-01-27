@@ -17,37 +17,29 @@ function getInformationAboutUser(userDTO) {
     let roles = userDTO.roles.map(role => role.name.replace("ROLE_", "")).join(', ');
 
     cardsContainer.innerHTML = `
-        <div class="col-md-6 col-lg-3">
-            <div class="info-card">
-                <div class="info-label">
-                    <i class="bi bi-hash me-1"></i>ID
-                </div>
-                <div class="info-value"># ${userDTO.id}</div>
+        <div class="info-card">
+            <div class="info-label">
+                <i class="bi bi-hash me-1"></i>ID
             </div>
+            <div class="info-value"># ${userDTO.id}</div>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="info-card">
-                <div class="info-label">
-                    <i class="bi bi-person me-1"></i>Username
-                </div>
-                <div class="info-value">${userDTO.username}</div>
+        <div class="info-card">
+            <div class="info-label">
+                <i class="bi bi-person me-1"></i>Username
             </div>
+            <div class="info-value">${userDTO.username}</div>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="info-card">
-                <div class="info-label">
-                    <i class="bi bi-envelope me-1"></i>Email
-                </div>
-                <div class="info-value" style="font-size: 1.1rem;">${userDTO.email}</div>
+        <div class="info-card">
+            <div class="info-label">
+                <i class="bi bi-envelope me-1"></i>Email
             </div>
+            <div class="info-value" style="font-size: 1.1rem;">${userDTO.email}</div>
         </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="info-card">
-                <div class="info-label">
-                    <i class="bi bi-shield-check me-1"></i>Role
-                </div>
-                <div class="info-value role">${roles}</div>
+        <div class="info-card">
+            <div class="info-label">
+                <i class="bi bi-shield-check me-1"></i>Role
             </div>
+            <div class="info-value role">${roles}</div>
         </div>`;
 }
 
