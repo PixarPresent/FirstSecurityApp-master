@@ -37,4 +37,9 @@ public class ViewController {
         model.addAttribute("user", user);
         return "user";
     }
+
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/login";
+    }
 }

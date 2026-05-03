@@ -418,7 +418,7 @@
                 <span th:text="${logout}"></span>
             </div>
 
-            <form th:action="@{/process_login}" method="post">
+            <form id="loginForm">
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
                     <div class="input-icon">
@@ -480,5 +480,32 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
     <script src="/theme.js"></script>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: document.getElementById("username").value,
+                    password: document.getElementById("password").value
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("token", data.token);
+
+                window.location.href = "/user";
+            } else {
+                alert("Login failed");
+            }
+        });
+    </script>
+
 </body>
 </html>

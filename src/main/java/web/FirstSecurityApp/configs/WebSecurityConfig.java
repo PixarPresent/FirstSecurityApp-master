@@ -1,28 +1,30 @@
 package web.FirstSecurityApp.configs;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import web.FirstSecurityApp.security.JwtAuthFilter;
 import web.FirstSecurityApp.security.UserDetailsServiceImpl;
 
-@EnableWebSecurity
-@EnableTransactionManagement
 @Configuration
-public class WebSecurityConfig   {
-    private final UserDetailsServiceImpl userDetailsService;
-    private final LoginSuccessHandler loginSuccessHandler;
+public class WebSecurityConfig {
 
-    @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, LoginSuccessHandler loginSuccessHandler) {
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtAuthFilter jwtAuthFilter;
+
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
+                             JwtAuthFilter jwtAuthFilter) {
         this.userDetailsService = userDetailsService;
-        this.loginSuccessHandler = loginSuccessHandler;
+        this.jwtAuthFilter = jwtAuthFilter;
     }
 
     @Bean
@@ -31,7 +33,7 @@ public class WebSecurityConfig   {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setPasswordEncoder(getPasswordEncoder());
         authProvider.setUserDetailsService(userDetailsService);
@@ -39,31 +41,35 @@ public class WebSecurityConfig   {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
+        http
+                .csrf(csrf -> csrf.disable())
 
-                .requestMatchers("/admin").hasRole("ADMIN")
-                .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/login", "/welcome", "/process_login").permitAll()
-                .anyRequest().authenticated()
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-                .and()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/welcome", "/error").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
 
-                .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/process_login")
-                .failureUrl("/login?error=true")
-                .successHandler(loginSuccessHandler)
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user", "/user/**").hasAnyRole("USER", "ADMIN")
 
-                .and()
-                .httpBasic()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
 
-                .and()
+                        .anyRequest().authenticated()
+                )
 
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login");
+                .authenticationProvider(authenticationProvider())
+
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

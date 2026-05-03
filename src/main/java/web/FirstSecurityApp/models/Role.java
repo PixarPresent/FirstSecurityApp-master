@@ -38,6 +38,7 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
+        System.out.println("ROLE AUTHORITY = " + name);
         return name;
     }
 

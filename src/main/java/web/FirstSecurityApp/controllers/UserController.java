@@ -26,7 +26,7 @@ public class UserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/api/avatar/upload")
+    @PostMapping("/avatar/upload")
     public ResponseEntity<String> uploadAvatar(@RequestParam("file") MultipartFile file, Principal principal) {
         String username = principal.getName();
 //        avatarService.storeAvatar(file, username);
