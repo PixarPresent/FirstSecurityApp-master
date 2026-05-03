@@ -12,8 +12,7 @@ async function loadUserInfo() {
         const response = await fetch(`http://localhost:8080/api/user`, { credentials: 'include' });
         const userDTO = await response.json();
 
-        document.getElementById("userEmail").textContent = userDTO.email;
-        document.getElementById("userRoles").textContent = userDTO.roles.map(role => role.name.replace("ROLE_", "")).join(', ');
+        document.getElementById("userEmailBottom").textContent = userDTO.email;
 
         getInformationAboutUser(userDTO);
     } catch (error) {
